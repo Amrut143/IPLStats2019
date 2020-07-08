@@ -22,7 +22,7 @@ public class IPLAnalyserTest {
     }
 
     @Test
-    public void givenWrongIPLMOstRunsCSVFile_ShouldReturnCustomExceptionType() {
+    public void givenWrongIPLMostRunsCSVFile_ShouldReturnCustomExceptionType() {
         try {
             IPLAnalyser iplAnalyser = new IPLAnalyser();
             iplAnalyser.loadIPLMostRunsData(WROMG_MOST_RUNS_CSV_FILE_PATH);
@@ -30,6 +30,15 @@ public class IPLAnalyserTest {
             Assert.assertEquals(IPLAnalyserException.ExceptionType.IPL_FILE_PROBLEM, e.type);
             e.printStackTrace();
         }
-
     }
+
+    @Test
+    public void givenIPLMostRunsCSVFile_WhenCorrect_ButDelimiterIncorrect_ShouldThrowException() {
+        try {
+            IPLAnalyser iplAnalyser = new IPLAnalyser();
+            iplAnalyser.loadIPLMostRunsData(IPL_MOST_RUNS_CSV_FILE_PATH);
+        } catch (IPLAnalyserException e) {
+            Assert.assertEquals(IPLAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUE, e.type);
+        }
+        }
 }
