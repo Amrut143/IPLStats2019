@@ -2,7 +2,7 @@ package com.bridgelabz.iplanalyser.model;
 
 import com.opencsv.bean.CsvBindByName;
 
-public class MostRunCSV {
+public class MostRunsCSV {
 
     @CsvBindByName(column = "PLAYER", required = true)
     public String player;
