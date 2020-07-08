@@ -12,6 +12,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.StreamSupport;
 
 public class IPLAnalyser {
@@ -25,9 +26,8 @@ public class IPLAnalyser {
     public int loadIPLMostRunsData(String csvFilePath) throws IPLAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            Iterator<MostRunsCSV> battingDataIterator = csvBuilder.getCSVFileIterator(reader, MostRunsCSV.class);
-            Iterable<MostRunsCSV> battingDataIterable = () -> battingDataIterator;
-            return (int) StreamSupport.stream(battingDataIterable.spliterator(), false).count();
+            List<MostRunsCSV> iplCSVList = csvBuilder.getCSVFileList(reader, MostRunsCSV.class);
+            return iplCSVList.size();
         } catch (IOException | CSVBuilderException e) {
             throw new IPLAnalyserException(IPLAnalyserException.ExceptionType.IPL_FILE_PROBLEM, "there is some issue related to csv file");
         } catch (RuntimeException e) {
@@ -45,12 +45,23 @@ public class IPLAnalyser {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
             Iterator<MostWktsCSV> bowlingDataIterator = csvBuilder.getCSVFileIterator(reader, MostWktsCSV.class);
-            Iterable<MostWktsCSV> bowlingDataIterable = () -> bowlingDataIterator;
-            return (int) StreamSupport.stream(bowlingDataIterable.spliterator(), false).count();
+            return this.getCount(bowlingDataIterator);
         } catch (IOException | CSVBuilderException e) {
             throw new IPLAnalyserException(IPLAnalyserException.ExceptionType.IPL_FILE_PROBLEM, "there is some issue related to csv file");
         } catch (RuntimeException e) {
             throw new IPLAnalyserException(IPLAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUE, "might be issue in delimiter or header");
         }
+    }
+
+    /**
+     * Function to count the number of entries
+     * @param iterator
+     * @param <T>
+     * @return
+     */
+    private <T> int getCount(Iterator<T> iterator) {
+        Iterable<T> csvIterable = () -> iterator;
+        int numberOfEntries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
+        return numberOfEntries;
     }
 }
