@@ -39,6 +39,18 @@ public class IPLAnalyserTest {
             iplAnalyser.loadIPLMostRunsData(IPL_MOST_RUNS_CSV_FILE_PATH);
         } catch (IPLAnalyserException e) {
             Assert.assertEquals(IPLAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUE, e.type);
+            e.printStackTrace();
         }
+    }
+
+    @Test
+    public void givenIPLMostRunsCSVFile_WhenCorrect_ButHeaderIncorrect_ShouldThrowException() {
+        try {
+            IPLAnalyser iplAnalyser = new IPLAnalyser();
+            iplAnalyser.loadIPLMostRunsData(IPL_MOST_RUNS_CSV_FILE_PATH);
+        } catch (IPLAnalyserException e) {
+            Assert.assertEquals(IPLAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUE, e.type);
+            e.printStackTrace();
         }
+    }
 }
