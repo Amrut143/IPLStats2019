@@ -1,4 +1,6 @@
 package com.bridgelabz.iplanalyser.utility;
 
-public class PlayerType {
+public enum PlayerType {
+
+    BATSMAN, BOWLER;
 }
