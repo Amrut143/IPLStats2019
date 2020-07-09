@@ -8,18 +8,18 @@ import com.bridgelabz.opencsvbuilder.service.CSVBuilderFactory;
 import com.bridgelabz.opencsvbuilder.service.ICSVBuilder;
 import com.google.gson.Gson;
 
+import javax.swing.text.html.HTMLDocument;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.StreamSupport;
 
 public class IPLAnalyser {
 
-    List<MostRunsCSV> iplCSVList;
+    Map<String, MostRunsCSV> runsCSVMap = new HashMap<>();
+    List<MostRunsCSV> iplCSVList = new ArrayList<>();
     /**
      *
      * @param csvFilePath
@@ -29,8 +29,11 @@ public class IPLAnalyser {
     public int loadIPLMostRunsData(String csvFilePath) throws IPLAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            iplCSVList = csvBuilder.getCSVFileList(reader, MostRunsCSV.class);
-            return iplCSVList.size();
+            Iterator<MostRunsCSV> csvIterator = csvBuilder.getCSVFileIterator(reader, MostRunsCSV.class);
+            Iterable<MostRunsCSV> iplCSVIterable = () -> csvIterator;
+            StreamSupport.stream(iplCSVIterable.spliterator(), false)
+                         .forEach(runsCSV -> runsCSVMap.put(runsCSV.player, new MostRunsCSV()));
+            return runsCSVMap.size();
         } catch (IOException | CSVBuilderException e) {
             throw new IPLAnalyserException(IPLAnalyserException.ExceptionType.IPL_FILE_PROBLEM, "there is some issue related to csv file");
         } catch (RuntimeException e) {
