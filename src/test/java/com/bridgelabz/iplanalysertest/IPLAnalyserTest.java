@@ -192,8 +192,8 @@ public class IPLAnalyserTest {
             IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BOWLER);
             iplAnalyser.loadIPLData(IPL_MOST_WKTS_CSV_FILE_PATH);
             String iplPLayersRecords = iplAnalyser.getFieldWiseSortedIPLPLayersRecords(SortByField.Parameter.BOWLING_AVG);
-            IPLBowlerDataCSV[] mostRunCSVS = new Gson().fromJson(iplPLayersRecords, IPLBowlerDataCSV[].class);
-            Assert.assertEquals("Anukul Roy", mostRunCSVS[0].player);
+            IPLBowlerDataCSV[] mostWktsCSV = new Gson().fromJson(iplPLayersRecords, IPLBowlerDataCSV[].class);
+            Assert.assertEquals("Anukul Roy", mostWktsCSV[0].player);
         } catch (IPLAnalyserException e) {
             e.printStackTrace();
         }
@@ -205,8 +205,8 @@ public class IPLAnalyserTest {
             IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BOWLER);
             iplAnalyser.loadIPLData(IPL_MOST_WKTS_CSV_FILE_PATH);
             String iplPLayersRecords = iplAnalyser.getFieldWiseSortedIPLPLayersRecords(SortByField.Parameter.BOWL_STRIKERATE);
-            IPLBowlerDataCSV[] mostRunsCSV = new Gson().fromJson(iplPLayersRecords, IPLBowlerDataCSV[].class);
-            Assert.assertEquals("Alzarri Joseph", mostRunsCSV[0].player);
+            IPLBowlerDataCSV[] mostWktsCSV = new Gson().fromJson(iplPLayersRecords, IPLBowlerDataCSV[].class);
+            Assert.assertEquals("Alzarri Joseph", mostWktsCSV[0].player);
         } catch (IPLAnalyserException e) {
             e.printStackTrace();
         }
@@ -218,8 +218,21 @@ public class IPLAnalyserTest {
             IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BOWLER);
             iplAnalyser.loadIPLData(IPL_MOST_WKTS_CSV_FILE_PATH);
             String iplPLayersRecords = iplAnalyser.getFieldWiseSortedIPLPLayersRecords(SortByField.Parameter.ECONOMY);
-            IPLBowlerDataCSV[] mostRunCSVS = new Gson().fromJson(iplPLayersRecords, IPLBowlerDataCSV[].class);
-            Assert.assertEquals("Anukul Roy", mostRunCSVS[0].player);
+            IPLBowlerDataCSV[] mostWktsCSV = new Gson().fromJson(iplPLayersRecords, IPLBowlerDataCSV[].class);
+            Assert.assertEquals("Anukul Roy", mostWktsCSV[0].player);
+        } catch (IPLAnalyserException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenIPLMostWktsCSVFile_WhenSortedOn5WAnd4WWithStrikeRate_ShouldReturnCorrectDesiredSortedData() {
+        try {
+            IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BOWLER);
+            iplAnalyser.loadIPLData(IPL_MOST_WKTS_CSV_FILE_PATH);
+            String iplPLayersRecords = iplAnalyser.getFieldWiseSortedIPLPLayersRecords(SortByField.Parameter.FIVEWKT_FOURWKT_STRIKERATE);
+            IPLBowlerDataCSV[] mostWktsCSV = new Gson().fromJson(iplPLayersRecords, IPLBowlerDataCSV[].class);
+            Assert.assertEquals("Kagiso Rabada", mostWktsCSV[0].player);
         } catch (IPLAnalyserException e) {
             e.printStackTrace();
         }
