@@ -20,10 +20,10 @@ public class MostRunsCSV {
     public String highScore;
 
     @CsvBindByName(column = "Avg")
-    public Double avg;
+    public double avg;
 
     @CsvBindByName(column = "SR")
-    public String strikeRate;
+    public double strikeRate;
 
     @CsvBindByName(column = "100", required = true)
     public int centuary;
@@ -36,4 +36,7 @@ public class MostRunsCSV {
 
     @CsvBindByName(column = "6s", required = true)
     public int six;
+
+    public MostRunsCSV() {
+    }
 }
