@@ -1,5 +1,6 @@
 package com.bridgelabz.iplanalysertest;
 
+import com.bridgelabz.iplanalyser.adapter.BatsmanAdapter;
 import com.bridgelabz.iplanalyser.exception.IPLAnalyserException;
 import com.bridgelabz.iplanalyser.model.IPLBatsmanDataCSV;
 import com.bridgelabz.iplanalyser.service.IPLAnalyser;
@@ -20,7 +21,7 @@ public class IPLAnalyserTest {
     @Test
     public void givenIPLMostRunsCSVFile_ShouldReturnCorrectRecords() {
         try {
-            IPLAnalyser iplAnalyser = new IPLAnalyser();
+            IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BATSMAN);
             int numOfRecords = iplAnalyser.loadIPLData(IPL_MOST_RUNS_CSV_FILE_PATH);
             Assert.assertEquals(100, numOfRecords);
         } catch (IPLAnalyserException e) {
@@ -31,7 +32,7 @@ public class IPLAnalyserTest {
     @Test
     public void givenWrongIPLMostRunsCSVFile_ShouldReturnCustomExceptionType() {
         try {
-            IPLAnalyser iplAnalyser = new IPLAnalyser();
+            IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BATSMAN);
             iplAnalyser.loadIPLData(WRONG_MOST_RUNS_CSV_FILE_PATH);
         } catch (IPLAnalyserException e) {
             Assert.assertEquals(IPLAnalyserException.ExceptionType.IPL_FILE_PROBLEM, e.type);
@@ -42,7 +43,7 @@ public class IPLAnalyserTest {
     @Test
     public void givenIPLMostRunsCSVFile_WhenCorrect_ButDelimiterIncorrect_ShouldThrowException() {
         try {
-            IPLAnalyser iplAnalyser = new IPLAnalyser();
+            IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BATSMAN);
             iplAnalyser.loadIPLData(IPL_MOST_RUNS_CSV_FILE_PATH);
         } catch (IPLAnalyserException e) {
             Assert.assertEquals(IPLAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUE, e.type);
@@ -53,7 +54,7 @@ public class IPLAnalyserTest {
     @Test
     public void givenIPLMostRunsCSVFile_WhenCorrect_ButHeaderIncorrect_ShouldThrowException() {
         try {
-            IPLAnalyser iplAnalyser = new IPLAnalyser();
+            IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BATSMAN);
             iplAnalyser.loadIPLData(IPL_MOST_RUNS_CSV_FILE_PATH);
         } catch (IPLAnalyserException e) {
             Assert.assertEquals(IPLAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUE, e.type);
@@ -64,7 +65,7 @@ public class IPLAnalyserTest {
     @Test
     public void givenIPLMostWktsCSVFile_ShouldReturnCorrectRecords() {
         try {
-            IPLAnalyser iplAnalyser = new IPLAnalyser();
+            IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BOWLER);
             int numOfRecords = iplAnalyser.loadIPLData(IPL_MOST_WKTS_CSV_FILE_PATH);
             Assert.assertEquals(99, numOfRecords);
         } catch (IPLAnalyserException e) {
@@ -75,7 +76,7 @@ public class IPLAnalyserTest {
     @Test
     public void givenWrongIPLMostWktsCSVFile_ShouldReturnCustomExceptionType() {
         try {
-            IPLAnalyser iplAnalyser = new IPLAnalyser();
+            IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BOWLER);
             iplAnalyser.loadIPLData(WRONG_MOST_WKTS_CSV_FILE_PATH);
         } catch (IPLAnalyserException e) {
             Assert.assertEquals(IPLAnalyserException.ExceptionType.IPL_FILE_PROBLEM, e.type);
@@ -86,7 +87,7 @@ public class IPLAnalyserTest {
     @Test
     public void givenIPLMostWktsCSVFile_WhenCorrect_ButDelimiterIncorrect_ShouldThrowException() {
         try {
-            IPLAnalyser iplAnalyser = new IPLAnalyser();
+            IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BOWLER);
             iplAnalyser.loadIPLData(IPL_MOST_WKTS_CSV_FILE_PATH);
         } catch (IPLAnalyserException e) {
             Assert.assertEquals(IPLAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUE, e.type);
@@ -97,7 +98,7 @@ public class IPLAnalyserTest {
     @Test
     public void givenIPLMostWktsCSVFile_WhenCorrect_ButHeaderIncorrect_ShouldThrowException() {
         try {
-            IPLAnalyser iplAnalyser = new IPLAnalyser();
+            IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BOWLER);
             iplAnalyser.loadIPLData(IPL_MOST_WKTS_CSV_FILE_PATH);
         } catch (IPLAnalyserException e) {
             Assert.assertEquals(IPLAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUE, e.type);
@@ -113,6 +114,19 @@ public class IPLAnalyserTest {
             String iplPLayersRecords = iplAnalyser.getFieldWiseSortedIPLPLayersRecords(SortByField.Parameter.BATTING_AVG);
             IPLBatsmanDataCSV[] mostRunsCSV = new Gson().fromJson(iplPLayersRecords, IPLBatsmanDataCSV[].class);
             Assert.assertEquals("MS Dhoni", mostRunsCSV[mostRunsCSV.length - 1].player);
+        } catch (IPLAnalyserException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenIPLMOstRunsCSVFile_WhenSortedOnStrikeRate_ShouldReturnCorrectDesiredSortedData() {
+        try {
+            IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BATSMAN);
+            iplAnalyser.loadIPLData(IPL_MOST_RUNS_CSV_FILE_PATH);
+            String iplpLayersRecords = iplAnalyser.getFieldWiseSortedIPLPLayersRecords(SortByField.Parameter.STRIKERATE);
+            IPLBatsmanDataCSV[] mostRunsCSV = new Gson().fromJson(iplpLayersRecords, IPLBatsmanDataCSV[].class);
+            Assert.assertEquals("Ishant Sharma", mostRunsCSV[mostRunsCSV.length - 1].player);
         } catch (IPLAnalyserException e) {
             e.printStackTrace();
         }
