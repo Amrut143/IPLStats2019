@@ -1,7 +1,9 @@
 package com.bridgelabz.iplanalysertest;
 
 import com.bridgelabz.iplanalyser.exception.IPLAnalyserException;
+import com.bridgelabz.iplanalyser.model.MostRunsCSV;
 import com.bridgelabz.iplanalyser.service.IPLAnalyser;
+import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -99,5 +101,19 @@ public class IPLAnalyserTest {
             Assert.assertEquals(IPLAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUE, e.type);
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void givenIPLMostRunsCSVFile_WhenSortedOnAvg_ShouldReturnCorrectDesiredSortedData() {
+        try {
+            IPLAnalyser iplAnalyser = new IPLAnalyser();
+            iplAnalyser.loadIPLMostRunsData(IPL_MOST_RUNS_CSV_FILE_PATH);
+            String iplpLayersRecords = iplAnalyser.getAvgWiseSortedIPLPLayersRecords(IPL_MOST_RUNS_CSV_FILE_PATH);
+            MostRunsCSV[] mostRunsCSV = new Gson().fromJson(iplpLayersRecords, MostRunsCSV[].class);
+            Assert.assertEquals("MS Dhoni", mostRunsCSV[mostRunsCSV.length - 1].player);
+        } catch (IPLAnalyserException e) {
+            e.printStackTrace();
+        }
+
     }
 }
