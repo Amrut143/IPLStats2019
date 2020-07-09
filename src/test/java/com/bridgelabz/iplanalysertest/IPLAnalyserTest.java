@@ -1,8 +1,10 @@
 package com.bridgelabz.iplanalysertest;
 
 import com.bridgelabz.iplanalyser.adapter.BatsmanAdapter;
+import com.bridgelabz.iplanalyser.adapter.BowlerAdapter;
 import com.bridgelabz.iplanalyser.exception.IPLAnalyserException;
 import com.bridgelabz.iplanalyser.model.IPLBatsmanDataCSV;
+import com.bridgelabz.iplanalyser.model.IPLBowlerDataCSV;
 import com.bridgelabz.iplanalyser.service.IPLAnalyser;
 import com.bridgelabz.iplanalyser.utility.PlayerType;
 import com.bridgelabz.iplanalyser.utility.SortByField;
@@ -179,6 +181,19 @@ public class IPLAnalyserTest {
             String iplPLayersRecords = iplAnalyser.getFieldWiseSortedIPLPLayersRecords(SortByField.Parameter.BAT_RUN_WITH_AVG);
             IPLBatsmanDataCSV[] mostRunsCSV = new Gson().fromJson(iplPLayersRecords, IPLBatsmanDataCSV[].class);
             Assert.assertEquals("David Warner ", mostRunsCSV[mostRunsCSV.length - 1].player);
+        } catch (IPLAnalyserException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenIPLMostWktsCSVFile_WhenSortedOnAvg_ShouldReturnCorrectDesiredSortedData() {
+        try {
+            IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BOWLER);
+            iplAnalyser.loadIPLData(IPL_MOST_WKTS_CSV_FILE_PATH);
+            String iplPLayersRecords = iplAnalyser.getFieldWiseSortedIPLPLayersRecords(SortByField.Parameter.BOWLING_AVG);
+            IPLBowlerDataCSV[] mostRunCSVS = new Gson().fromJson(iplPLayersRecords, IPLBowlerDataCSV[].class);
+            Assert.assertEquals("Anukul Roy", mostRunCSVS[0].player);
         } catch (IPLAnalyserException e) {
             e.printStackTrace();
         }
