@@ -6,17 +6,20 @@ import com.bridgelabz.iplanalyser.model.MostWktsCSV;
 import com.bridgelabz.opencsvbuilder.exceptions.CSVBuilderException;
 import com.bridgelabz.opencsvbuilder.service.CSVBuilderFactory;
 import com.bridgelabz.opencsvbuilder.service.ICSVBuilder;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
 public class IPLAnalyser {
 
+    List<MostRunsCSV> iplCSVList;
     /**
      *
      * @param csvFilePath
@@ -26,7 +29,7 @@ public class IPLAnalyser {
     public int loadIPLMostRunsData(String csvFilePath) throws IPLAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            List<MostRunsCSV> iplCSVList = csvBuilder.getCSVFileList(reader, MostRunsCSV.class);
+            iplCSVList = csvBuilder.getCSVFileList(reader, MostRunsCSV.class);
             return iplCSVList.size();
         } catch (IOException | CSVBuilderException e) {
             throw new IPLAnalyserException(IPLAnalyserException.ExceptionType.IPL_FILE_PROBLEM, "there is some issue related to csv file");
@@ -63,5 +66,18 @@ public class IPLAnalyser {
         Iterable<T> csvIterable = () -> iterator;
         int numberOfEntries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
         return numberOfEntries;
+    }
+
+    public String getAvgWiseSortedIPLPLayersRecords(String csvFilePath) throws IPLAnalyserException {
+        loadIPLMostRunsData(csvFilePath);
+        if (iplCSVList == null || iplCSVList.size() == 0) {
+            throw new IPLAnalyserException(IPLAnalyserException.ExceptionType.NO_IPL_DATA, "NO_IPL_DATA");
+        }
+
+        Comparator<MostRunsCSV> iplComparator = Comparator.comparing(iplRecord -> iplRecord.avg);
+        iplCSVList.sort(iplComparator);
+        String sortedIplData = new Gson().toJson(iplCSVList);
+        return sortedIplData;
+
     }
 }
