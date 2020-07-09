@@ -13,7 +13,7 @@ public class SortByField {
 
     public enum Parameter {
         BATTING_AVG, STRIKERATE, SIX_AND_FOURS, SIX_AND_FOURS_WITH_STRIKERATE, BAT_AVG_WITH_STRIKERATE, BAT_RUN_WITH_AVG,
-        BOWLING_AVG, BOWL_STRIKERATE, ECONOMY, FIVEWKT_FOURWKT_STRIKERATE;
+        BOWLING_AVG, BOWL_STRIKERATE, ECONOMY, FIVEWKT_FOURWKT_STRIKERATE, BOWL_AVG_WITH_STRIKERATE;
     }
 
     SortByField() {
@@ -34,7 +34,7 @@ public class SortByField {
         Comparator<IPLRecordDAO> bowlAvgComparator = Comparator.comparing(mostRunCSV -> mostRunCSV.bowlingAverage);
         Comparator<IPLRecordDAO> econComparator = Comparator.comparing(mostRunCSV -> mostRunCSV.economy);
         Comparator<IPLRecordDAO> bowlingSRWith4n5W = Comparator.comparing(iplRecordDAO -> (
-                        (iplRecordDAO.fourWkts * 4) + (iplRecordDAO.fiveWkts * 5)), Comparator.reverseOrder());
+                                              (iplRecordDAO.fourWkts * 4) + (iplRecordDAO.fiveWkts * 5)), Comparator.reverseOrder());
 
         sortParameterComparator.put(Parameter.BATTING_AVG, batAvgComparator);
         sortParameterComparator.put(Parameter.STRIKERATE, strikeRateComparator);
@@ -50,6 +50,8 @@ public class SortByField {
         sortParameterComparator.put(Parameter.ECONOMY, econComparator);
         sortParameterComparator.put(Parameter.FIVEWKT_FOURWKT_STRIKERATE,
                                     bowlingSRWith4n5W.thenComparing(strikeRateComparator));
+        sortParameterComparator.put(Parameter.BOWL_AVG_WITH_STRIKERATE,
+                                    bowlAvgComparator.thenComparing(strikeRateComparator));
 
 
         Comparator<IPLRecordDAO> comparator = sortParameterComparator.get(parameter);
