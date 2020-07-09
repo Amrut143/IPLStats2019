@@ -211,4 +211,17 @@ public class IPLAnalyserTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void givenIPLMostWktsCSVFile_WhenSortedOnEconomy_ShouldReturnCorrectDesiredSortedData() {
+        try {
+            IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BOWLER);
+            iplAnalyser.loadIPLData(IPL_MOST_WKTS_CSV_FILE_PATH);
+            String iplPLayersRecords = iplAnalyser.getFieldWiseSortedIPLPLayersRecords(SortByField.Parameter.ECONOMY);
+            IPLBowlerDataCSV[] mostRunCSVS = new Gson().fromJson(iplPLayersRecords, IPLBowlerDataCSV[].class);
+            Assert.assertEquals("Anukul Roy", mostRunCSVS[0].player);
+        } catch (IPLAnalyserException e) {
+            e.printStackTrace();
+        }
+    }
 }
