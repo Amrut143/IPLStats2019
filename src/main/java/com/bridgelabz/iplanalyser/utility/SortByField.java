@@ -13,7 +13,7 @@ public class SortByField {
 
     public enum Parameter {
         BATTING_AVG, STRIKERATE, SIX_AND_FOURS, SIX_AND_FOURS_WITH_STRIKERATE, BAT_AVG_WITH_STRIKERATE, BAT_RUN_WITH_AVG,
-        BOWLING_AVG, BOWL_STRIKERATE, ECONOMY, FIVEWKT_FOURWKT_STRIKERATE, BOWL_AVG_WITH_STRIKERATE;
+        BOWLING_AVG, BOWL_STRIKERATE, ECONOMY, FIVEWKT_FOURWKT_STRIKERATE, BOWL_AVG_WITH_STRIKERATE, BOWL_WKTS_WITH_AVG;
     }
 
     SortByField() {
@@ -31,10 +31,11 @@ public class SortByField {
                 Comparator.comparing(iplBatsmanDAO -> (iplBatsmanDAO.six * 6) + (iplBatsmanDAO.fours * 4),
                                      Comparator.reverseOrder());
         Comparator<IPLRecordDAO> batRunComparator = Comparator.comparing(mostRunCSV -> mostRunCSV.batsmanRun);
-        Comparator<IPLRecordDAO> bowlAvgComparator = Comparator.comparing(mostRunCSV -> mostRunCSV.bowlingAverage);
-        Comparator<IPLRecordDAO> econComparator = Comparator.comparing(mostRunCSV -> mostRunCSV.economy);
+        Comparator<IPLRecordDAO> bowlAvgComparator = Comparator.comparing(mostWktsCSV -> mostWktsCSV.bowlingAverage);
+        Comparator<IPLRecordDAO> econComparator = Comparator.comparing(mostWktsCSV -> mostWktsCSV.economy);
         Comparator<IPLRecordDAO> bowlingSRWith4n5W = Comparator.comparing(iplRecordDAO -> (
                                               (iplRecordDAO.fourWkts * 4) + (iplRecordDAO.fiveWkts * 5)), Comparator.reverseOrder());
+        Comparator<IPLRecordDAO> wktsComparator = Comparator.comparing(mostWktsCSV -> mostWktsCSV.wkts);
 
         sortParameterComparator.put(Parameter.BATTING_AVG, batAvgComparator);
         sortParameterComparator.put(Parameter.STRIKERATE, strikeRateComparator);
@@ -52,6 +53,8 @@ public class SortByField {
                                     bowlingSRWith4n5W.thenComparing(strikeRateComparator));
         sortParameterComparator.put(Parameter.BOWL_AVG_WITH_STRIKERATE,
                                     bowlAvgComparator.thenComparing(strikeRateComparator));
+        sortParameterComparator.put(Parameter.BOWL_WKTS_WITH_AVG,
+                                    wktsComparator.thenComparing(bowlAvgComparator));
 
 
         Comparator<IPLRecordDAO> comparator = sortParameterComparator.get(parameter);
