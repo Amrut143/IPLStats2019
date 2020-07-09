@@ -1,86 +1,51 @@
 package com.bridgelabz.iplanalyser.service;
 
+import com.bridgelabz.iplanalyser.adapter.IPLAdapter;
+import com.bridgelabz.iplanalyser.adapter.IPLAdapterFactory;
+import com.bridgelabz.iplanalyser.dao.IPLRecordDAO;
 import com.bridgelabz.iplanalyser.exception.IPLAnalyserException;
-import com.bridgelabz.iplanalyser.model.MostRunsCSV;
-import com.bridgelabz.iplanalyser.model.MostWktsCSV;
-import com.bridgelabz.opencsvbuilder.exceptions.CSVBuilderException;
-import com.bridgelabz.opencsvbuilder.service.CSVBuilderFactory;
-import com.bridgelabz.opencsvbuilder.service.ICSVBuilder;
+import com.bridgelabz.iplanalyser.utility.PlayerType;
+import com.bridgelabz.iplanalyser.utility.SortByField;
 import com.google.gson.Gson;
 
-import javax.swing.text.html.HTMLDocument;
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.StreamSupport;
+import java.util.stream.Collectors;
+
 
 public class IPLAnalyser {
 
-    Map<String, MostRunsCSV> runsCSVMap = new HashMap<>();
-    List<MostRunsCSV> iplCSVList = new ArrayList<>();
+    Map<String, IPLRecordDAO> runCSVMap;
+    public PlayerType playerType;
+
+    public IPLAnalyser(PlayerType playerType) {
+        this.playerType = playerType;
+    }
+
+    public IPLAnalyser() {
+        this.runCSVMap = new HashMap<>();
+    }
+
+    public <T> int loadIPLData(String... csvFilePath) throws IPLAnalyserException {
+        runCSVMap = new IPLAdapterFactory().getPlayerData(playerType, csvFilePath);
+        return runCSVMap.size();
+    }
+
     /**
-     *
-     * @param csvFilePath
+     * Function to sort ipl data parameter wise
+     * @param parameter
      * @return
      * @throws IPLAnalyserException
      */
-    public int loadIPLMostRunsData(String csvFilePath) throws IPLAnalyserException {
-        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
-            ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            Iterator<MostRunsCSV> csvIterator = csvBuilder.getCSVFileIterator(reader, MostRunsCSV.class);
-            Iterable<MostRunsCSV> iplCSVIterable = () -> csvIterator;
-            StreamSupport.stream(iplCSVIterable.spliterator(), false)
-                         .forEach(runsCSV -> runsCSVMap.put(runsCSV.player, new MostRunsCSV()));
-            return runsCSVMap.size();
-        } catch (IOException | CSVBuilderException e) {
-            throw new IPLAnalyserException(IPLAnalyserException.ExceptionType.IPL_FILE_PROBLEM, "there is some issue related to csv file");
-        } catch (RuntimeException e) {
-            throw new IPLAnalyserException(IPLAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUE, "might be issue in delimiter or header");
-        }
-    }
-
-    /**
-     *
-     * @param csvFilePath
-     * @return
-     * @throws IPLAnalyserException
-     */
-    public int loadIPLMostWktsData(String csvFilePath) throws IPLAnalyserException {
-        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
-            ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            Iterator<MostWktsCSV> bowlingDataIterator = csvBuilder.getCSVFileIterator(reader, MostWktsCSV.class);
-            return this.getCount(bowlingDataIterator);
-        } catch (IOException | CSVBuilderException e) {
-            throw new IPLAnalyserException(IPLAnalyserException.ExceptionType.IPL_FILE_PROBLEM, "there is some issue related to csv file");
-        } catch (RuntimeException e) {
-            throw new IPLAnalyserException(IPLAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUE, "might be issue in delimiter or header");
-        }
-    }
-
-    /**
-     * Function to count the number of entries
-     * @param iterator
-     * @param <T>
-     * @return
-     */
-    private <T> int getCount(Iterator<T> iterator) {
-        Iterable<T> csvIterable = () -> iterator;
-        int numberOfEntries = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
-        return numberOfEntries;
-    }
-
-    public String getAvgWiseSortedIPLPLayersRecords(String csvFilePath) throws IPLAnalyserException {
-        loadIPLMostRunsData(csvFilePath);
-        if (iplCSVList == null || iplCSVList.size() == 0) {
+    public String getFieldWiseSortedIPLPLayersRecords(SortByField.Parameter parameter) throws IPLAnalyserException {
+        if (runCSVMap == null || runCSVMap.size() == 0) {
             throw new IPLAnalyserException(IPLAnalyserException.ExceptionType.NO_IPL_DATA, "NO_IPL_DATA");
         }
 
-        Comparator<MostRunsCSV> iplComparator = Comparator.comparing(iplRecord -> iplRecord.avg);
-        iplCSVList.sort(iplComparator);
-        String sortedIplData = new Gson().toJson(iplCSVList);
+        Comparator<IPLRecordDAO> iplComparator = SortByField.getParameter(parameter);
+       ArrayList iplDAOList = runCSVMap.values().stream()
+                                        .sorted(iplComparator)
+                                        .collect(Collectors.toCollection(ArrayList::new));
+        String sortedIplData = new Gson().toJson(iplDAOList);
         return sortedIplData;
-
     }
 }
