@@ -110,10 +110,9 @@ public class IPLAnalyserTest {
             iplAnalyser.loadIPLMostRunsData(IPL_MOST_RUNS_CSV_FILE_PATH);
             String iplpLayersRecords = iplAnalyser.getAvgWiseSortedIPLPLayersRecords(IPL_MOST_RUNS_CSV_FILE_PATH);
             MostRunsCSV[] mostRunsCSV = new Gson().fromJson(iplpLayersRecords, MostRunsCSV[].class);
-            Assert.assertEquals("MS Dhoni", mostRunsCSV[mostRunsCSV.length - 1].player);
+            Assert.assertEquals("MS Dhoni", mostRunsCSV[0].player);
         } catch (IPLAnalyserException e) {
             e.printStackTrace();
         }
-
     }
 }
