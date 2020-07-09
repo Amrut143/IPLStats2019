@@ -124,8 +124,8 @@ public class IPLAnalyserTest {
         try {
             IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BATSMAN);
             iplAnalyser.loadIPLData(IPL_MOST_RUNS_CSV_FILE_PATH);
-            String iplpLayersRecords = iplAnalyser.getFieldWiseSortedIPLPLayersRecords(SortByField.Parameter.STRIKERATE);
-            IPLBatsmanDataCSV[] mostRunsCSV = new Gson().fromJson(iplpLayersRecords, IPLBatsmanDataCSV[].class);
+            String iplPlayersRecords = iplAnalyser.getFieldWiseSortedIPLPLayersRecords(SortByField.Parameter.STRIKERATE);
+            IPLBatsmanDataCSV[] mostRunsCSV = new Gson().fromJson(iplPlayersRecords, IPLBatsmanDataCSV[].class);
             Assert.assertEquals("Ishant Sharma", mostRunsCSV[mostRunsCSV.length - 1].player);
         } catch (IPLAnalyserException e) {
             e.printStackTrace();
@@ -137,9 +137,22 @@ public class IPLAnalyserTest {
         try {
             IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BATSMAN);
             iplAnalyser.loadIPLData(IPL_MOST_RUNS_CSV_FILE_PATH);
-            String iplpLayersRecords = iplAnalyser.getFieldWiseSortedIPLPLayersRecords(SortByField.Parameter.SIX_AND_FOURS);
-            IPLBatsmanDataCSV[] mostRunsCSV = new Gson().fromJson(iplpLayersRecords, IPLBatsmanDataCSV[].class);
+            String iplPLayersRecords = iplAnalyser.getFieldWiseSortedIPLPLayersRecords(SortByField.Parameter.SIX_AND_FOURS);
+            IPLBatsmanDataCSV[] mostRunsCSV = new Gson().fromJson(iplPLayersRecords, IPLBatsmanDataCSV[].class);
             Assert.assertEquals("Andre Russell", mostRunsCSV[0].player);
+        } catch (IPLAnalyserException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenIPLMOstRunsCSVFile_WhenSortedOn4SAnd6sWithStrikeRate_ShouldReturnCorrectDesiredSortedData() {
+        try {
+            IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BATSMAN);
+            iplAnalyser.loadIPLData(IPL_MOST_RUNS_CSV_FILE_PATH);
+            String iplPLayersRecords = iplAnalyser.getFieldWiseSortedIPLPLayersRecords(SortByField.Parameter.SIX_AND_FOURS_WITH_STRIKERATE);
+            IPLBatsmanDataCSV[] mostRunCSVS = new Gson().fromJson(iplPLayersRecords, IPLBatsmanDataCSV[].class);
+            Assert.assertEquals("Andre Russell", mostRunCSVS[0].player);
         } catch (IPLAnalyserException e) {
             e.printStackTrace();
         }
