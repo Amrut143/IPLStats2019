@@ -56,12 +56,10 @@ public abstract class IPLAdapter {
                             .forEach(mostWktsCSV -> iplRecordDAOMap.put(mostWktsCSV.player, new IPLRecordDAO(mostWktsCSV)));
             }
             return iplRecordDAOMap;
-        } catch (IOException e) {
-            throw new IPLAnalyserException(IPLAnalyserException.ExceptionType.NO_IPL_DATA, e.getMessage());
+        } catch (IOException | CSVBuilderException e) {
+            throw new IPLAnalyserException(IPLAnalyserException.ExceptionType.IPL_FILE_PROBLEM, e.getMessage());
         } catch (RuntimeException e) {
             throw new IPLAnalyserException(IPLAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUE, e.getMessage());
-        } catch (CSVBuilderException e) {
-            throw new IPLAnalyserException(IPLAnalyserException.ExceptionType.IPL_FILE_PROBLEM, e.getMessage());
         }
     }
 }
