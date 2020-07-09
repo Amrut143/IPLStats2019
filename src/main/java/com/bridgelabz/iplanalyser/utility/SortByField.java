@@ -12,7 +12,7 @@ public class SortByField {
     static Map<Parameter, Comparator> sortParameterComparator = new HashMap<>();
 
     public enum Parameter {
-        BATTING_AVG, STRIKERATE;
+        BATTING_AVG, STRIKERATE, SIX_AND_FOURS;
     }
 
     SortByField() {
@@ -26,9 +26,13 @@ public class SortByField {
     public static Comparator getParameter(SortByField.Parameter parameter) {
         Comparator<IPLRecordDAO> avgComparator = Comparator.comparing(mostRunCSV -> mostRunCSV.battingAverage);
         Comparator<IPLRecordDAO> strikeRateComparator = Comparator.comparing(mostRunCSV -> mostRunCSV.strikeRate);
+        Comparator<IPLRecordDAO> sixesAndFoursComparator =
+                Comparator.comparing(iplBatsmanDAO -> (iplBatsmanDAO.six * 6) + (iplBatsmanDAO.fours * 4),
+                                     Comparator.reverseOrder());
 
         sortParameterComparator.put(Parameter.BATTING_AVG, avgComparator);
         sortParameterComparator.put(Parameter.STRIKERATE, strikeRateComparator);
+        sortParameterComparator.put(Parameter.SIX_AND_FOURS, sixesAndFoursComparator);
 
         Comparator<IPLRecordDAO> comparator = sortParameterComparator.get(parameter);
         return comparator;
