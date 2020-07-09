@@ -2,7 +2,7 @@ package com.bridgelabz.iplanalyser.model;
 
 import com.opencsv.bean.CsvBindByName;
 
-public class MostRunsCSV {
+public class IPLBatsmanDataCSV {
 
     @CsvBindByName(column = "PLAYER", required = true)
     public String player;
@@ -37,6 +37,22 @@ public class MostRunsCSV {
     @CsvBindByName(column = "6s", required = true)
     public int six;
 
-    public MostRunsCSV() {
+    public IPLBatsmanDataCSV(IPLBatsmanDataCSV iplBatsmanDataCSV){}
+
+    public IPLBatsmanDataCSV() {
+    }
+
+    public IPLBatsmanDataCSV(String player, int match, int innings, int run, String highScore, double avg, double strikeRate, int centuary, int halfCentuary, int fours, int six) {
+        this.player = player;
+        this.match = match;
+        this.innings = innings;
+        this.run = run;
+        this.highScore = highScore;
+        this.avg = avg;
+        this.strikeRate = strikeRate;
+        this.centuary = centuary;
+        this.halfCentuary = halfCentuary;
+        this.fours = fours;
+        this.six = six;
     }
 }

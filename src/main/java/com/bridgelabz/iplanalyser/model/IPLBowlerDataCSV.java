@@ -2,7 +2,7 @@ package com.bridgelabz.iplanalyser.model;
 
 import com.opencsv.bean.CsvBindByName;
 
-public class MostWktsCSV {
+public class IPLBowlerDataCSV {
 
     @CsvBindByName(column = "PLAYER", required = true)
     public String player;
@@ -14,7 +14,7 @@ public class MostWktsCSV {
     public int innings;
 
     @CsvBindByName(column = "Ov", required = true)
-    public String  over;
+    public double  over;
 
     @CsvBindByName(column = "Runs", required = true)
     public int runs;
@@ -23,10 +23,10 @@ public class MostWktsCSV {
     public int wkts;
 
     @CsvBindByName(column = "Avg", required = true)
-    public String average;
+    public double average;
 
     @CsvBindByName(column = "SR", required = true)
-    public String  strikeRate;
+    public double  strikeRate;
 
     @CsvBindByName(column = "4w", required = true)
     public int fourWkts;
@@ -34,5 +34,9 @@ public class MostWktsCSV {
     @CsvBindByName(column = "5w", required = true)
     public int fiveWkts;
 
+    @CsvBindByName(column = "Econ", required = true)
+    public double economy;
 
+    public IPLBowlerDataCSV() {
+    }
 }
