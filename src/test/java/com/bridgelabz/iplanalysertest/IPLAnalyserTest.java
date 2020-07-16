@@ -1,5 +1,6 @@
 package com.bridgelabz.iplanalysertest;
 
+import com.bridgelabz.iplanalyser.adapter.BatsmanAdapter;
 import com.bridgelabz.iplanalyser.exception.IPLAnalyserException;
 import com.bridgelabz.iplanalyser.model.IPLBatsmanDataCSV;
 import com.bridgelabz.iplanalyser.model.IPLBowlerDataCSV;
@@ -263,13 +264,26 @@ public class IPLAnalyserTest {
     }
 
     @Test
-    public void givenIPLMostWktsCSVFile_WhenSortedOnBattingAndBowlingAvg_ShouldReturnCorrectDesiredSortedData() {
+    public void givenIPLMostRunsCSVFile_WhenSortedOnBattingAndBowlingAvg_ShouldReturnCorrectDesiredSortedData() {
         try {
             IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BATSMAN);
             iplAnalyser.loadIPLData(IPL_MOST_RUNS_CSV_FILE_PATH, IPL_MOST_WKTS_CSV_FILE_PATH);
             String iplPLayersRecords = iplAnalyser.getFieldWiseSortedIPLPLayersRecords(SortByField.Parameter.BATTING_BOWLING_AVERAGE);
-            IPLBatsmanDataCSV[] mostWktsCSV = new Gson().fromJson(iplPLayersRecords, IPLBatsmanDataCSV[].class);
-            Assert.assertEquals("Andre Russell", mostWktsCSV[mostWktsCSV.length - 1].player);
+            IPLBatsmanDataCSV[] mostRunsCSV = new Gson().fromJson(iplPLayersRecords, IPLBatsmanDataCSV[].class);
+            Assert.assertEquals("Andre Russell", mostRunsCSV[mostRunsCSV.length - 1].player);
+        } catch (IPLAnalyserException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenIPLMostRunsCSVFile_WhenSortedOnALLRounders_ShouldReturnCorrectDesiredSortedData() {
+        try {
+            IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BATSMAN);
+            iplAnalyser.loadIPLData(IPL_MOST_RUNS_CSV_FILE_PATH, IPL_MOST_WKTS_CSV_FILE_PATH);
+            String iplPLayersRecords = iplAnalyser.getFieldWiseSortedIPLPLayersRecords(SortByField.Parameter.IPL_BEST_ALLROUNDER);
+            IPLBatsmanDataCSV[] mostRunsCSV = new Gson().fromJson(iplPLayersRecords, IPLBatsmanDataCSV[].class);
+            Assert.assertEquals("Hardik Pandya", mostRunsCSV[0].player);
         } catch (IPLAnalyserException e) {
             e.printStackTrace();
         }

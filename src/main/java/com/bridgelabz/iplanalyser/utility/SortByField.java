@@ -1,7 +1,6 @@
 package com.bridgelabz.iplanalyser.utility;
 
 import com.bridgelabz.iplanalyser.dao.IPLRecordDAO;
-import com.bridgelabz.iplanalyser.model.IPLBatsmanDataCSV;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -13,10 +12,8 @@ public class SortByField {
 
     public enum Parameter {
         BATTING_AVG, STRIKERATE, SIX_AND_FOURS, SIX_AND_FOURS_WITH_STRIKERATE, BAT_AVG_WITH_STRIKERATE, BAT_RUN_WITH_AVG,
-        BOWLING_AVG, BOWL_STRIKERATE, ECONOMY, FIVEWKT_FOURWKT_STRIKERATE, BOWL_AVG_WITH_STRIKERATE, BOWL_WKTS_WITH_AVG, BATTING_BOWLING_AVERAGE;
-    }
-
-    SortByField() {
+        BOWLING_AVG, BOWL_STRIKERATE, ECONOMY, FIVEWKT_FOURWKT_STRIKERATE, BOWL_AVG_WITH_STRIKERATE, BOWL_WKTS_WITH_AVG,
+        BATTING_BOWLING_AVERAGE, IPL_BEST_ALLROUNDER;
     }
 
     /**
@@ -36,6 +33,9 @@ public class SortByField {
         Comparator<IPLRecordDAO> bowlingSRWith4n5W = Comparator.comparing(iplRecordDAO -> (
                                               (iplRecordDAO.fourWkts * 4) + (iplRecordDAO.fiveWkts * 5)), Comparator.reverseOrder());
         Comparator<IPLRecordDAO> wktsComparator = Comparator.comparing(mostWktsCSV -> mostWktsCSV.wkts);
+        Comparator<IPLRecordDAO> bestAllRounder = Comparator.comparing(iplRecordDAO ->
+                                               (iplRecordDAO.batsmanRun * iplRecordDAO.wkts), Comparator.reverseOrder());
+
 
 
         sortParameterComparator.put(Parameter.BATTING_AVG, batAvgComparator);
@@ -57,7 +57,7 @@ public class SortByField {
         sortParameterComparator.put(Parameter.BOWL_WKTS_WITH_AVG,
                                     wktsComparator.thenComparing(bowlAvgComparator));
         sortParameterComparator.put(Parameter.BATTING_BOWLING_AVERAGE, new SortBatBowlAvg());
-
+        sortParameterComparator.put(Parameter.IPL_BEST_ALLROUNDER, bestAllRounder);
 
         Comparator<IPLRecordDAO> comparator = sortParameterComparator.get(parameter);
         return comparator;

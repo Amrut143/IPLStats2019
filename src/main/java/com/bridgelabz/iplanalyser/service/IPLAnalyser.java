@@ -1,6 +1,5 @@
 package com.bridgelabz.iplanalyser.service;
 
-import com.bridgelabz.iplanalyser.adapter.IPLAdapter;
 import com.bridgelabz.iplanalyser.adapter.IPLAdapterFactory;
 import com.bridgelabz.iplanalyser.dao.IPLRecordDAO;
 import com.bridgelabz.iplanalyser.exception.IPLAnalyserException;
@@ -19,12 +18,16 @@ public class IPLAnalyser {
 
     public IPLAnalyser(PlayerType playerType) {
         this.playerType = playerType;
-    }
-
-    public IPLAnalyser() {
         this.runCSVMap = new HashMap<>();
     }
 
+    /**
+     *
+     * @param csvFilePath
+     * @param <T>
+     * @return
+     * @throws IPLAnalyserException
+     */
     public <T> int loadIPLData(String... csvFilePath) throws IPLAnalyserException {
         runCSVMap = new IPLAdapterFactory().getPlayerData(playerType, csvFilePath);
         return runCSVMap.size();

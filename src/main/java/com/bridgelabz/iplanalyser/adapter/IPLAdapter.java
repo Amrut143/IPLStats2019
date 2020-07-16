@@ -66,16 +66,4 @@ public abstract class IPLAdapter {
             throw new IPLAnalyserException(IPLAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUE, e.getMessage());
         }
     }
-
-    private void prepareFile(String filePath, String replaceWrongValuesWith) throws IOException {
-        String searchFor = "-";
-        try (Stream<String> lines = Files.lines(Paths.get(filePath))) {
-            List<String> replaced = lines
-                    .map(line-> line.replaceAll(searchFor, replaceWrongValuesWith))
-                    .collect(Collectors.toList());
-            Files.write(Paths.get("./src/test/resources/readableCsv.csv"), replaced);
-        } catch (NoSuchFileException e) {
-            throw e;
-        }
-    }
 }
