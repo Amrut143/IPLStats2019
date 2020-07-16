@@ -12,10 +12,14 @@ import com.bridgelabz.opencsvbuilder.service.ICSVBuilder;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public abstract class IPLAdapter {
@@ -60,6 +64,18 @@ public abstract class IPLAdapter {
             throw new IPLAnalyserException(IPLAnalyserException.ExceptionType.IPL_FILE_PROBLEM, e.getMessage());
         } catch (RuntimeException e) {
             throw new IPLAnalyserException(IPLAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUE, e.getMessage());
+        }
+    }
+
+    private void prepareFile(String filePath, String replaceWrongValuesWith) throws IOException {
+        String searchFor = "-";
+        try (Stream<String> lines = Files.lines(Paths.get(filePath))) {
+            List<String> replaced = lines
+                    .map(line-> line.replaceAll(searchFor, replaceWrongValuesWith))
+                    .collect(Collectors.toList());
+            Files.write(Paths.get("./src/test/resources/readableCsv.csv"), replaced);
+        } catch (NoSuchFileException e) {
+            throw e;
         }
     }
 }

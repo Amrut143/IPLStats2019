@@ -49,6 +49,5 @@ public class IPLRecordDAO {
         economy = iplBowlerDataCSV.economy;
         match = iplBowlerDataCSV.match;
         over = iplBowlerDataCSV.over;
-
     }
 }

@@ -36,8 +36,6 @@ public class SortByField {
         Comparator<IPLRecordDAO> bowlingSRWith4n5W = Comparator.comparing(iplRecordDAO -> (
                                               (iplRecordDAO.fourWkts * 4) + (iplRecordDAO.fiveWkts * 5)), Comparator.reverseOrder());
         Comparator<IPLRecordDAO> wktsComparator = Comparator.comparing(mostWktsCSV -> mostWktsCSV.wkts);
-        Comparator<IPLRecordDAO> bestAllRounderAvg = Comparator.comparing(iplRecordDAO ->
-                (iplRecordDAO.battingAverage / iplRecordDAO.bowlingAverage), Comparator.reverseOrder());
 
 
         sortParameterComparator.put(Parameter.BATTING_AVG, batAvgComparator);
@@ -58,7 +56,7 @@ public class SortByField {
                                     bowlAvgComparator.thenComparing(strikeRateComparator));
         sortParameterComparator.put(Parameter.BOWL_WKTS_WITH_AVG,
                                     wktsComparator.thenComparing(bowlAvgComparator));
-        sortParameterComparator.put(Parameter.BATTING_BOWLING_AVERAGE, bestAllRounderAvg);
+        sortParameterComparator.put(Parameter.BATTING_BOWLING_AVERAGE, new SortBatBowlAvg());
 
 
         Comparator<IPLRecordDAO> comparator = sortParameterComparator.get(parameter);
