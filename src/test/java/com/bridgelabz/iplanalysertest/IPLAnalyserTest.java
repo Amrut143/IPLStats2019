@@ -1,7 +1,5 @@
 package com.bridgelabz.iplanalysertest;
 
-import com.bridgelabz.iplanalyser.adapter.BatsmanAdapter;
-import com.bridgelabz.iplanalyser.adapter.BowlerAdapter;
 import com.bridgelabz.iplanalyser.exception.IPLAnalyserException;
 import com.bridgelabz.iplanalyser.model.IPLBatsmanDataCSV;
 import com.bridgelabz.iplanalyser.model.IPLBowlerDataCSV;
@@ -69,7 +67,7 @@ public class IPLAnalyserTest {
         try {
             IPLAnalyser iplAnalyser = new IPLAnalyser(PlayerType.BOWLER);
             int numOfRecords = iplAnalyser.loadIPLData(IPL_MOST_WKTS_CSV_FILE_PATH);
-            Assert.assertEquals(99, numOfRecords);
+            Assert.assertEquals(86, numOfRecords);
         } catch (IPLAnalyserException e) {
             e.printStackTrace();
         }
@@ -271,7 +269,7 @@ public class IPLAnalyserTest {
             iplAnalyser.loadIPLData(IPL_MOST_RUNS_CSV_FILE_PATH, IPL_MOST_WKTS_CSV_FILE_PATH);
             String iplPLayersRecords = iplAnalyser.getFieldWiseSortedIPLPLayersRecords(SortByField.Parameter.BATTING_BOWLING_AVERAGE);
             IPLBatsmanDataCSV[] mostWktsCSV = new Gson().fromJson(iplPLayersRecords, IPLBatsmanDataCSV[].class);
-            Assert.assertEquals("Andre Russell", mostWktsCSV[0].player);
+            Assert.assertEquals("Andre Russell", mostWktsCSV[mostWktsCSV.length - 1].player);
         } catch (IPLAnalyserException e) {
             e.printStackTrace();
         }
